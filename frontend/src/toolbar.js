@@ -1,4 +1,3 @@
-// toolbar.js
 
 import { DraggableNode } from './draggableNode';
 

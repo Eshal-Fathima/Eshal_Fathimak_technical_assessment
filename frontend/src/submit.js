@@ -1,7 +1,3 @@
-// submit.js
-// Reads the current pipeline from the Zustand store, POSTs it to the backend,
-// and shows the analysis result (num_nodes, num_edges, is_dag) in an alert.
-// --------------------------------------------------
 
 import { useStore } from './store';
 
@@ -10,8 +6,6 @@ export const SubmitButton = () => {
   const edges = useStore((state) => state.edges);
 
   const handleSubmit = async () => {
-    // Sanity-check: log the exact payload so we can verify
-    // node ids and edge source/target values are correct.
     console.log('Submitting pipeline:', JSON.stringify({ nodes, edges }, null, 2));
 
     try {

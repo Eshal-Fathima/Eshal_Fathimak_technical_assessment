@@ -1,7 +1,3 @@
-// textNode.js
-// Text node with auto-resize, dynamic {{ variable }} handle detection,
-// and React Flow internals sync via useUpdateNodeInternals.
-// --------------------------------------------------
 
 import { useState, useRef, useEffect } from 'react';
 import { useUpdateNodeInternals } from 'reactflow';
@@ -13,8 +9,7 @@ export const TextNode = ({ id, data }) => {
   const textareaRef = useRef(null);
   const updateNodeInternals = useUpdateNodeInternals();
 
-  // Effect 1: Auto-resize textarea height whenever text changes.
-  // Reset to 'auto' first so scrollHeight can shrink back down on deletion.
+  // Auto-resize textarea height whenever text changes.
   useEffect(() => {
     const el = textareaRef.current;
     if (!el) return;
@@ -22,8 +17,7 @@ export const TextNode = ({ id, data }) => {
     el.style.height = `${el.scrollHeight}px`;
   }, [text]);
 
-  // Effect 2: Scan text for {{ variable }} patterns and update variable list.
-  // Uses a Set to automatically deduplicate repeated variable names.
+  // Scan text for {{ variable }} patterns and update variable list.
   useEffect(() => {
     const regex = /\{\{\s*([A-Za-z_$][A-Za-z0-9_$]*)\s*\}\}/g;
     const found = new Set();
@@ -34,9 +28,7 @@ export const TextNode = ({ id, data }) => {
     setVariables(Array.from(found));
   }, [text]);
 
-  // Effect 3: Notify React Flow that this node's handles have changed.
-  // Runs AFTER render so new Handle elements are in the DOM before React Flow
-  // recalculates connection points.
+  // Notify React Flow that this node's handles have changed.
   useEffect(() => {
     updateNodeInternals(id);
   }, [variables, id, updateNodeInternals]);
@@ -52,7 +44,6 @@ export const TextNode = ({ id, data }) => {
   ];
 
   // The textarea field config: passes the ref and controlled value/onChange
-  // so TextNode (not BaseNode) owns the state for auto-resize + regex scanning.
   const fields = [
     {
       name: 'text',

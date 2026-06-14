@@ -1,7 +1,3 @@
-// timerNode.js
-// Custom Timer node component leveraging BaseNode.
-// --------------------------------------------------
-
 import { BaseNode } from './BaseNode';
 
 export const TimerNode = ({ id, data }) => {

@@ -14,23 +14,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-# --------------------------------------------------
-# Pydantic model for the incoming pipeline payload.
-# We use Dict[str, Any] for nodes/edges so we don't
-# need to enumerate every React Flow field — we only
-# care about 'id' (nodes) and 'source'/'target' (edges).
-# --------------------------------------------------
 class PipelineData(BaseModel):
     nodes: List[Dict[str, Any]]
     edges: List[Dict[str, Any]]
 
 
-# --------------------------------------------------
-# Kahn's algorithm — topological sort via in-degree.
-# Returns True if the graph is a DAG (no cycles).
-# Works correctly for isolated nodes and empty graphs.
-# --------------------------------------------------
+# Kahn's algorithm
 def is_dag(nodes: List[Dict], edges: List[Dict]) -> bool:
     node_ids = [node['id'] for node in nodes]
     in_degree = {nid: 0 for nid in node_ids}
@@ -42,7 +31,6 @@ def is_dag(nodes: List[Dict], edges: List[Dict]) -> bool:
         adjacency[src].append(tgt)
         in_degree[tgt] += 1
 
-    # Start with all nodes that have no incoming edges
     queue = deque([nid for nid in node_ids if in_degree[nid] == 0])
     visited_count = 0
 
@@ -53,14 +41,10 @@ def is_dag(nodes: List[Dict], edges: List[Dict]) -> bool:
             in_degree[neighbor] -= 1
             if in_degree[neighbor] == 0:
                 queue.append(neighbor)
-
-    # If we visited every node, there are no cycles → it's a DAG
     return visited_count == len(node_ids)
 
 
-# --------------------------------------------------
 # Endpoints
-# --------------------------------------------------
 @app.get('/')
 def read_root():
     return {'Ping': 'Pong'}

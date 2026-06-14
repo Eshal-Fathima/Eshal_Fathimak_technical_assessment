@@ -1,6 +1,3 @@
-// filterNode.js
-// Custom Filter node component leveraging BaseNode.
-// --------------------------------------------------
 
 import { BaseNode } from './BaseNode';
 

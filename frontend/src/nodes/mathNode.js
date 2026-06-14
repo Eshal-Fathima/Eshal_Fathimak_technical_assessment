@@ -1,6 +1,3 @@
-// mathNode.js
-// Custom Math node component leveraging BaseNode.
-// --------------------------------------------------
 
 import { BaseNode } from './BaseNode';
 

@@ -1,6 +1,3 @@
-// notesNode.js
-// Custom Notes node component leveraging BaseNode.
-// --------------------------------------------------
 
 import { BaseNode } from './BaseNode';
 

@@ -1,6 +1,3 @@
-// outputNode.js
-// Output node component refactored to use BaseNode.
-// --------------------------------------------------
 
 import { BaseNode } from './BaseNode';
 

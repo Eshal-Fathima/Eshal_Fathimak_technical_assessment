@@ -1,6 +1,3 @@
-// inputNode.js
-// Input node component refactored to use BaseNode.
-// --------------------------------------------------
 
 import { BaseNode } from './BaseNode';
 

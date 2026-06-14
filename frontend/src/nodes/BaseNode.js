@@ -1,6 +1,5 @@
 // BaseNode.js
-// A reusable node component for React Flow that handles titles, inputs, outputs, form fields, and state sync.
-// --------------------------------------------------
+// A reusable node 
 
 import { useState, useEffect } from 'react';
 import { Handle, Position } from 'reactflow';
@@ -27,7 +26,6 @@ export const BaseNode = ({
     return initial;
   });
 
-  // Keep local state in sync if data changes from outside (e.g., store updates)
   useEffect(() => {
     setFieldValues((prev) => {
       const updated = { ...prev };
@@ -40,7 +38,6 @@ export const BaseNode = ({
     });
   }, [data, fields]);
 
-  // Synchronize state changes to Zustand store
   const handleFieldChange = (fieldName, val) => {
     setFieldValues((prev) => ({
       ...prev,
@@ -52,7 +49,6 @@ export const BaseNode = ({
     }
   };
 
-  // Auto-initialize default values in the Zustand store if they aren't already set
   useEffect(() => {
     fields.forEach((field) => {
       if (data?.[field.name] === undefined && field.defaultValue !== undefined) {
@@ -68,7 +64,6 @@ export const BaseNode = ({
         {title}
       </div>
 
-      {/* Node Body wrapper containing fields, connector rows, and custom children */}
       <div className="node-body">
         {/* Render Input Handles as rows at the top */}
         {inputs.map((input) => (
@@ -130,10 +125,8 @@ export const BaseNode = ({
           </>
         )}
 
-        {/* Render children/custom markup inside the node body */}
         {children}
 
-        {/* Render Output Handles as rows at the bottom */}
         {outputs.map((output) => (
           <div key={output.id} className="node-connector output-connector">
             <span>{output.label}</span>

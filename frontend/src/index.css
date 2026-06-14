@@ -30,7 +30,6 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-/* React Flow Canvas Wrapper overrides */
 .react-flow {
   background-color: var(--color-bg);
 }
@@ -39,7 +38,6 @@ code {
   background-color: var(--color-bg);
 }
 
-/* Node Container styling */
 .node-container {
   background: var(--color-node-bg);
   border: 1.5px solid var(--color-border);
@@ -57,7 +55,6 @@ code {
   transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
-/* Exception: Text node should dynamically grow as text increases */
 .text-node {
   width: auto;
   min-width: 280px;
@@ -69,7 +66,6 @@ code {
   box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2), var(--shadow);
 }
 
-/* Node Title/Header styling */
 .node-title {
   background: var(--color-node-header-bg);
   color: var(--color-text);
@@ -83,7 +79,6 @@ code {
   border-top-right-radius: 10px;
 }
 
-/* Node Body content */
 .node-body {
   padding: var(--spacing-md);
   display: flex;
@@ -91,7 +86,6 @@ code {
   gap: var(--spacing-md);
 }
 
-/* Field styling inside Node Body */
 .node-field {
   display: flex;
   flex-direction: column;
@@ -194,7 +188,6 @@ code {
   margin-top: 4px;
 }
 
-/* Draggable Node inside Toolbar */
 .draggable-node {
   cursor: grab;
   padding: 10px 18px;
@@ -224,7 +217,6 @@ code {
   transform: translateY(0);
 }
 
-/* Submit Section at the bottom */
 .submit-container {
   display: flex;
   justify-content: center;
@@ -258,7 +250,6 @@ code {
   transform: translateY(1px);
 }
 
-/* Handle Label & Row centering inside node cards */
 .node-connector {
   position: relative; /* Relative bounds for absolute handles */
   display: flex;
@@ -296,7 +287,6 @@ code {
   margin: 0;
 }
 
-/* Textarea auto-grow standardized styling override */
 .node-field textarea {
   resize: none !important;
   overflow: hidden !important;
@@ -305,7 +295,6 @@ code {
   box-sizing: border-box;
 }
 
-/* Zoom Controls (+/-) Dark Mode styling overrides */
 .react-flow__controls {
   box-shadow: var(--shadow) !important;
   background-color: var(--color-node-bg) !important;
@@ -335,7 +324,6 @@ code {
   fill: currentColor !important;
 }
 
-/* Minimap Dark Mode contrast styling overrides */
 .react-flow__minimap {
   background-color: #0c101b !important;
   border: 1.5px solid var(--color-border) !important;
@@ -349,7 +337,6 @@ code {
   stroke-width: 2 !important;
 }
 
-/* Right-click Context Menu */
 .context-menu {
   position: fixed;
   z-index: 9999;

@@ -1,6 +1,3 @@
-// ui.js
-// Displays the drag-and-drop UI
-// --------------------------------------------------
 
 import { useState, useRef, useCallback, useEffect } from 'react';
 import ReactFlow, {
