@@ -42,10 +42,13 @@ export const TextNode = ({ id, data }) => {
   }, [variables, id, updateNodeInternals]);
 
   // Build input handles from detected variables
-  const inputs = variables.map((name) => ({ id: name, label: name }));
+  const inputs = [
+    { id: 'input', label: 'input' },
+    ...variables.map((name) => ({ id: name, label: name }))
+  ];
 
   const outputs = [
-    { id: 'output', label: 'Output' }
+    { id: 'output', label: 'output' }
   ];
 
   // The textarea field config: passes the ref and controlled value/onChange

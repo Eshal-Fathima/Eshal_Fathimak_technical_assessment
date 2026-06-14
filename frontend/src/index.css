@@ -1,13 +1,351 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --color-primary: #6366f1; /* Indigo */
+  --color-primary-hover: #4f46e5;
+  --color-bg: #090d16;      /* Sleek dark canvas background */
+  --color-node-bg: #1e293b; /* Dark slate node background */
+  --color-node-header-bg: #334155; /* Slightly lighter slate for header */
+  --color-border: #475569;   /* Slate-600 */
+  --color-text: #f8fafc;    /* Off-white text */
+  --color-text-muted: #94a3b8; /* Cool gray for labels */
+  --radius: 12px;
+  --radius-sm: 6px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-family);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+/* React Flow Canvas Wrapper overrides */
+.react-flow {
+  background-color: var(--color-bg);
+}
+
+.react-flow__background {
+  background-color: var(--color-bg);
+}
+
+/* Node Container styling */
+.node-container {
+  background: var(--color-node-bg);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  width: 280px;
+  min-width: 280px;
+  box-sizing: border-box;
+  font-family: var(--font-family);
+  color: var(--color-text);
+  padding: 0; /* Let headers/body use padding */
+  overflow: visible; /* Allows handles to render correctly outside borders */
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Exception: Text node should dynamically grow as text increases */
+.text-node {
+  width: auto;
+  min-width: 280px;
+  max-width: 450px;
+}
+
+.node-container:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2), var(--shadow);
+}
+
+/* Node Title/Header styling */
+.node-title {
+  background: var(--color-node-header-bg);
+  color: var(--color-text);
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-bottom: 1.5px solid var(--color-border);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+/* Node Body content */
+.node-body {
+  padding: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+/* Field styling inside Node Body */
+.node-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+.node-field label {
+  font-size: 11px;
+  color: #8899aa;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.node-field input,
+.node-field select,
+.node-field textarea {
+  background-color: #0f172a;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.node-field input:focus,
+.node-field select:focus,
+.node-field textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
+}
+
+/* Custom React Flow Handles */
+.react-flow__handle {
+  width: 10px;
+  height: 10px;
+  background: var(--color-primary) !important;
+  border: 2px solid var(--color-node-bg) !important;
+  border-radius: 50%;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+  z-index: 10;
+}
+
+.react-flow__handle:hover {
+  transform: scale(1.3);
+  background: var(--color-primary-hover) !important;
+  cursor: crosshair;
+}
+
+/* Custom React Flow Edges & Active Connection line */
+.react-flow__edge-path,
+.react-flow__connection-path {
+  stroke: #7c6ff7 !important;
+  stroke-width: 2.5px !important;
+  filter: drop-shadow(0 0 6px #7c6ff7) drop-shadow(0 0 12px #7c6ff7) !important;
+  stroke-dasharray: none !important;
+  transition: stroke-width 0.15s ease, filter 0.15s ease;
+}
+
+.react-flow__edge-path:hover {
+  stroke-width: 4px !important;
+  filter: drop-shadow(0 0 8px #7c6ff7) drop-shadow(0 0 16px #7c6ff7) !important;
+}
+
+/* Pipeline Toolbar */
+.pipeline-toolbar {
+  background: #0f172a;
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.toolbar-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.toolbar-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.toolbar-nodes-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+/* Draggable Node inside Toolbar */
+.draggable-node {
+  cursor: grab;
+  padding: 10px 18px;
+  background: var(--color-node-bg);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s, border-color 0.2s, transform 0.15s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  user-select: none;
+}
+
+.draggable-node:hover {
+  background: var(--color-node-header-bg);
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(99, 102, 241, 0.2);
+}
+
+.draggable-node:active {
+  cursor: grabbing;
+  transform: translateY(0);
+}
+
+/* Submit Section at the bottom */
+.submit-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--spacing-md);
+  background: #0f172a;
+  border-top: 1px solid var(--color-border);
+}
+
+.submit-button {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 12px 32px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.3);
+  transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
+}
+
+.submit-button:hover {
+  background: var(--color-primary-hover);
+  box-shadow: 0 4px 14px -1px rgba(99, 102, 241, 0.5);
+  transform: translateY(-1px);
+}
+
+.submit-button:active {
+  transform: translateY(1px);
+}
+
+/* Handle Label & Row centering inside node cards */
+.node-connector {
+  position: relative; /* Relative bounds for absolute handles */
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 24px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  box-sizing: border-box;
+}
+
+.input-connector {
+  justify-content: flex-start;
+  padding-left: 8px;
+}
+
+.output-connector {
+  justify-content: flex-end;
+  padding-right: 8px;
+}
+
+.input-connector .react-flow__handle {
+  position: absolute;
+  left: -5px; /* Half of 10px handle width to stick halfway out */
+  top: 50%;
+  transform: translateY(-50%) !important;
+  margin: 0;
+}
+
+.output-connector .react-flow__handle {
+  position: absolute;
+  right: -5px; /* Half of 10px handle width to stick halfway out */
+  top: 50%;
+  transform: translateY(-50%) !important;
+  margin: 0;
+}
+
+/* Textarea auto-grow standardized styling override */
+.node-field textarea {
+  resize: none !important;
+  overflow: hidden !important;
+  min-height: 60px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Zoom Controls (+/-) Dark Mode styling overrides */
+.react-flow__controls {
+  box-shadow: var(--shadow) !important;
+  background-color: var(--color-node-bg) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: var(--radius-sm) !important;
+  overflow: hidden;
+}
+
+.react-flow__controls-button {
+  background-color: var(--color-node-bg) !important;
+  color: var(--color-text) !important;
+  border: none !important;
+  border-bottom: 1px solid var(--color-border) !important;
+  fill: var(--color-text) !important;
+  transition: background-color 0.15s ease, fill 0.15s ease;
+}
+
+.react-flow__controls-button:last-child {
+  border-bottom: none !important;
+}
+
+.react-flow__controls-button:hover {
+  background-color: var(--color-node-header-bg) !important;
+}
+
+.react-flow__controls-button svg {
+  fill: currentColor !important;
+}
+
+/* Minimap Dark Mode contrast styling overrides */
+.react-flow__minimap {
+  background-color: #0c101b !important;
+  border: 1.5px solid var(--color-border) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: var(--shadow) !important;
+}
+
+.react-flow__minimap-node {
+  fill: #334155 !important;
+  stroke: var(--color-border) !important;
+  stroke-width: 2 !important;
+}
+

@@ -62,157 +62,89 @@ export const BaseNode = ({
   }, [id, fields, data, updateNodeField]);
 
   return (
-    <div className="node-container" style={{
-      minWidth: '220px',
-      minHeight: '80px',
-      border: '1px solid #475569',
-      borderRadius: '8px',
-      backgroundColor: '#1e293b',
-      color: '#f8fafc',
-      padding: '12px',
-      boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '10px',
-      fontFamily: 'system-ui, -apple-system, sans-serif'
-    }}>
+    <div className={`node-container ${title.toLowerCase().replace(/\s+/g, '-')}-node`}>
       {/* Node Title Header */}
-      <div style={{
-        fontWeight: '600',
-        fontSize: '13px',
-        borderBottom: '1px solid #334155',
-        paddingBottom: '6px',
-        color: '#cbd5e1',
-        textTransform: 'uppercase',
-        letterSpacing: '0.05em'
-      }}>
+      <div className="node-title">
         {title}
       </div>
 
-      {/* Render Custom Fields */}
-      {fields.length > 0 && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          {fields.map((field) => {
-            const val = fieldValues[field.name] ?? '';
-            return (
-              <div key={field.name} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <label style={{ fontSize: '11px', color: '#94a3b8', fontWeight: '500' }}>
-                  {field.label}
-                </label>
-                {field.type === 'select' ? (
-                  <select
-                    value={val}
-                    onChange={(e) => handleFieldChange(field.name, e.target.value)}
-                    style={{
-                      backgroundColor: '#0f172a',
-                      color: '#f8fafc',
-                      border: '1px solid #334155',
-                      borderRadius: '4px',
-                      padding: '5px 8px',
-                      fontSize: '12px',
-                      outline: 'none',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    {field.options?.map((opt) => (
-                      <option key={opt} value={opt}>{opt}</option>
-                    ))}
-                  </select>
-                ) : field.type === 'textarea' ? (
-                  <textarea
-                    // Support external controlled value/onChange/ref for special nodes like TextNode
-                    ref={field.fieldRef || null}
-                    value={field.controlledValue !== undefined ? field.controlledValue : val}
-                    onChange={(e) => {
-                      if (field.controlledOnChange) {
-                        field.controlledOnChange(e.target.value);
-                        handleFieldChange(field.name, e.target.value);
-                      } else {
-                        handleFieldChange(field.name, e.target.value);
-                      }
-                    }}
-                    rows={3}
-                    style={{
-                      backgroundColor: '#0f172a',
-                      color: '#f8fafc',
-                      border: '1px solid #334155',
-                      borderRadius: '4px',
-                      padding: '5px 8px',
-                      fontSize: '12px',
-                      outline: 'none',
-                      resize: 'none',
-                      minWidth: '150px',
-                      maxWidth: '400px',
-                      width: 'fit-content',
-                      whiteSpace: 'pre',
-                      overflowX: 'hidden',
-                      boxSizing: 'border-box',
-                    }}
-                  />
-                ) : (
-                  <input
-                    type={field.type || 'text'}
-                    value={val}
-                    onChange={(e) => handleFieldChange(field.name, e.target.value)}
-                    style={{
-                      backgroundColor: '#0f172a',
-                      color: '#f8fafc',
-                      border: '1px solid #334155',
-                      borderRadius: '4px',
-                      padding: '5px 8px',
-                      fontSize: '12px',
-                      outline: 'none'
-                    }}
-                  />
-                )}
-              </div>
-            );
-          })}
-        </div>
-      )}
+      {/* Node Body wrapper containing fields, connector rows, and custom children */}
+      <div className="node-body">
+        {/* Render Input Handles as rows at the top */}
+        {inputs.map((input) => (
+          <div key={input.id} className="node-connector input-connector">
+            <Handle
+              type="target"
+              position={Position.Left}
+              id={`${id}-${input.id}`}
+            />
+            <span>{input.label}</span>
+          </div>
+        ))}
 
-      {/* Render children/custom markup inside the node body */}
-      {children}
+        {fields.length > 0 && (
+          <>
+            {fields.map((field) => {
+              const val = fieldValues[field.name] ?? '';
+              return (
+                <div key={field.name} className="node-field">
+                  <label>{field.label}</label>
+                  {field.type === 'select' ? (
+                    <select
+                      value={val}
+                      disabled={field.disabled}
+                      onChange={(e) => handleFieldChange(field.name, e.target.value)}
+                    >
+                      {field.options?.map((opt) => (
+                        <option key={opt} value={opt}>{opt}</option>
+                      ))}
+                    </select>
+                  ) : field.type === 'textarea' ? (
+                    <textarea
+                      ref={field.fieldRef || null}
+                      value={field.controlledValue !== undefined ? field.controlledValue : val}
+                      disabled={field.disabled}
+                      readOnly={field.readOnly}
+                      onChange={(e) => {
+                        if (field.controlledOnChange) {
+                          field.controlledOnChange(e.target.value);
+                          handleFieldChange(field.name, e.target.value);
+                        } else {
+                          handleFieldChange(field.name, e.target.value);
+                        }
+                      }}
+                      rows={3}
+                    />
+                  ) : (
+                    <input
+                      type={field.type || 'text'}
+                      value={val}
+                      disabled={field.disabled}
+                      readOnly={field.readOnly}
+                      onChange={(e) => handleFieldChange(field.name, e.target.value)}
+                    />
+                  )}
+                </div>
+              );
+            })}
+          </>
+        )}
 
-      {/* Render Input Handles on Left Edge */}
-      {inputs.map((input, i) => {
-        const topPercent = ((i + 1) / (inputs.length + 1)) * 100;
-        return (
-          <Handle
-            key={input.id}
-            type="target"
-            position={Position.Left}
-            id={`${id}-${input.id}`}
-            style={{
-              top: `${topPercent}%`,
-              backgroundColor: '#64748b',
-              width: '9px',
-              height: '9px',
-              border: '2px solid #1e293b'
-            }}
-          />
-        );
-      })}
+        {/* Render children/custom markup inside the node body */}
+        {children}
 
-      {/* Render Output Handles on Right Edge */}
-      {outputs.map((output, i) => {
-        const topPercent = ((i + 1) / (outputs.length + 1)) * 100;
-        return (
-          <Handle
-            key={output.id}
-            type="source"
-            position={Position.Right}
-            id={`${id}-${output.id}`}
-            style={{
-              top: `${topPercent}%`,
-              backgroundColor: '#64748b',
-              width: '9px',
-              height: '9px',
-              border: '2px solid #1e293b'
-            }}
-          />
-        );
-      })}
+        {/* Render Output Handles as rows at the bottom */}
+        {outputs.map((output) => (
+          <div key={output.id} className="node-connector output-connector">
+            <span>{output.label}</span>
+            <Handle
+              type="source"
+              position={Position.Right}
+              id={`${id}-${output.id}`}
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

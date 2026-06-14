@@ -18,6 +18,14 @@ export const OutputNode = ({ id, data }) => {
       type: 'select',
       options: ['Text', 'Image'],
       defaultValue: data?.outputType || 'Text'
+    },
+    {
+      name: 'result',
+      label: 'Result',
+      type: 'text',
+      defaultValue: data?.result || '',
+      disabled: true,
+      readOnly: true
     }
   ];
 

@@ -6,12 +6,22 @@ import { BaseNode } from './BaseNode';
 
 export const LLMNode = ({ id, data }) => {
   const inputs = [
-    { id: 'system', label: 'System' },
-    { id: 'prompt', label: 'Prompt' }
+    { id: 'system', label: 'system' },
+    { id: 'prompt', label: 'prompt' }
   ];
 
   const outputs = [
-    { id: 'response', label: 'Response' }
+    { id: 'response', label: 'response' }
+  ];
+
+  const fields = [
+    {
+      name: 'model',
+      label: 'Model',
+      type: 'select',
+      options: ['GPT-4', 'Gemini', 'Claude Opus', 'Claude Sonnet'],
+      defaultValue: data?.model || 'GPT-4'
+    }
   ];
 
   return (
@@ -21,11 +31,7 @@ export const LLMNode = ({ id, data }) => {
       title="LLM"
       inputs={inputs}
       outputs={outputs}
-      fields={[]}
-    >
-      <div style={{ fontSize: '12px', color: '#cbd5e1', padding: '2px 0' }}>
-        This is a LLM.
-      </div>
-    </BaseNode>
+      fields={fields}
+    />
   );
 };
