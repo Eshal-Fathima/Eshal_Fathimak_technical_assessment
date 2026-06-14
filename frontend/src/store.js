@@ -51,4 +51,15 @@ export const useStore = create((set, get) => ({
         }),
       });
     },
+    deleteNode: (nodeId) => {
+      set({
+        nodes: get().nodes.filter((n) => n.id !== nodeId),
+        edges: get().edges.filter((e) => e.source !== nodeId && e.target !== nodeId),
+      });
+    },
+    deleteEdge: (edgeId) => {
+      set({
+        edges: get().edges.filter((e) => e.id !== edgeId),
+      });
+    },
   }));

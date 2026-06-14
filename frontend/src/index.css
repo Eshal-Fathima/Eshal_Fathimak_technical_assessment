@@ -349,3 +349,91 @@ code {
   stroke-width: 2 !important;
 }
 
+/* Right-click Context Menu */
+.context-menu {
+  position: fixed;
+  z-index: 9999;
+  background: #1e293b;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  min-width: 170px;
+  animation: fadeInScale 0.12s ease;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.context-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 16px;
+  background: transparent;
+  color: var(--color-text);
+  border: none;
+  font-size: 13px;
+  font-family: var(--font-family);
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.12s ease;
+}
+
+.context-menu-item:hover {
+  background-color: var(--color-node-header-bg);
+}
+
+.context-menu-item + .context-menu-item {
+  border-top: 1px solid var(--color-border);
+}
+
+.context-menu-item--danger {
+  color: #f87171; /* Red-400 */
+}
+
+.context-menu-item--danger:hover {
+  background-color: rgba(248, 113, 113, 0.1);
+}
+
+/* Fit View button — sits above zoom controls in the canvas */
+.fit-view-button {
+  position: absolute;
+  bottom: 110px; /* sits above the Controls panel */
+  left: 12px;
+  z-index: 5;
+  background: var(--color-node-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 7px 14px;
+  font-size: 12px;
+  font-family: var(--font-family);
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+  white-space: nowrap;
+}
+
+.fit-view-button:hover {
+  background-color: var(--color-node-header-bg);
+  border-color: var(--color-primary);
+  transform: translateY(-1px);
+}
+
+.fit-view-button:active {
+  transform: translateY(0);
+}
+
+
