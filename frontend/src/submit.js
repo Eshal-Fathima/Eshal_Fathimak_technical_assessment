@@ -1,9 +1,11 @@
-
 import { useStore } from './store';
+import { shallow } from 'zustand/shallow';
 
 export const SubmitButton = () => {
-  const nodes = useStore((state) => state.nodes);
-  const edges = useStore((state) => state.edges);
+  const { nodes, edges } = useStore(
+    (state) => ({ nodes: state.nodes, edges: state.edges }),
+    shallow
+  );
 
   const handleSubmit = async () => {
     console.log('Submitting pipeline:', JSON.stringify({ nodes, edges }, null, 2));
