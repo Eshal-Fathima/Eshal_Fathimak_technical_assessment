@@ -1,48 +1,64 @@
 // textNode.js
-// Text node component refactored to use BaseNode with dynamic variable handles.
+// Text node with auto-resize, dynamic {{ variable }} handle detection,
+// and React Flow internals sync via useUpdateNodeInternals.
 // --------------------------------------------------
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { useUpdateNodeInternals } from 'reactflow';
 import { BaseNode } from './BaseNode';
 
 export const TextNode = ({ id, data }) => {
-  // Parse variables from text input (e.g. {{ variable }})
-  const parseVariables = (textVal) => {
-    const regex = /\{\{\s*([a-zA-Z_$][a-zA-Z0-9_$]*)\s*\}\}/g;
-    const vars = new Set();
+  const [text, setText] = useState(data?.text || '');
+  const [variables, setVariables] = useState([]);
+  const textareaRef = useRef(null);
+  const updateNodeInternals = useUpdateNodeInternals();
+
+  // Effect 1: Auto-resize textarea height whenever text changes.
+  // Reset to 'auto' first so scrollHeight can shrink back down on deletion.
+  useEffect(() => {
+    const el = textareaRef.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${el.scrollHeight}px`;
+  }, [text]);
+
+  // Effect 2: Scan text for {{ variable }} patterns and update variable list.
+  // Uses a Set to automatically deduplicate repeated variable names.
+  useEffect(() => {
+    const regex = /\{\{\s*([A-Za-z_$][A-Za-z0-9_$]*)\s*\}\}/g;
+    const found = new Set();
     let match;
-    while ((match = regex.exec(textVal)) !== null) {
-      vars.add(match[1]);
+    while ((match = regex.exec(text)) !== null) {
+      found.add(match[1]);
     }
-    return Array.from(vars);
-  };
+    setVariables(Array.from(found));
+  }, [text]);
 
-  const initialText = data?.text ?? '{{input}}';
-  const [variables, setVariables] = useState(() => parseVariables(initialText));
+  // Effect 3: Notify React Flow that this node's handles have changed.
+  // Runs AFTER render so new Handle elements are in the DOM before React Flow
+  // recalculates connection points.
+  useEffect(() => {
+    updateNodeInternals(id);
+  }, [variables, id, updateNodeInternals]);
 
-  // Handle updates to text from BaseNode field to recalculate variable handles
-  const handleFieldChange = (fieldName, val) => {
-    if (fieldName === 'text') {
-      setVariables(parseVariables(val));
-    }
-  };
-
-  // Convert variables to inputs config
-  const inputs = variables.map((v) => ({
-    id: v,
-    label: v
-  }));
+  // Build input handles from detected variables
+  const inputs = variables.map((name) => ({ id: name, label: name }));
 
   const outputs = [
     { id: 'output', label: 'Output' }
   ];
 
+  // The textarea field config: passes the ref and controlled value/onChange
+  // so TextNode (not BaseNode) owns the state for auto-resize + regex scanning.
   const fields = [
     {
       name: 'text',
       label: 'Text',
       type: 'textarea',
-      defaultValue: '{{input}}'
+      defaultValue: '',
+      fieldRef: textareaRef,
+      controlledValue: text,
+      controlledOnChange: setText,
     }
   ];
 
@@ -54,7 +70,6 @@ export const TextNode = ({ id, data }) => {
       inputs={inputs}
       outputs={outputs}
       fields={fields}
-      onFieldChange={handleFieldChange}
     />
   );
 };

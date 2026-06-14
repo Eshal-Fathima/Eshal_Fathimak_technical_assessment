@@ -120,8 +120,17 @@ export const BaseNode = ({
                   </select>
                 ) : field.type === 'textarea' ? (
                   <textarea
-                    value={val}
-                    onChange={(e) => handleFieldChange(field.name, e.target.value)}
+                    // Support external controlled value/onChange/ref for special nodes like TextNode
+                    ref={field.fieldRef || null}
+                    value={field.controlledValue !== undefined ? field.controlledValue : val}
+                    onChange={(e) => {
+                      if (field.controlledOnChange) {
+                        field.controlledOnChange(e.target.value);
+                        handleFieldChange(field.name, e.target.value);
+                      } else {
+                        handleFieldChange(field.name, e.target.value);
+                      }
+                    }}
                     rows={3}
                     style={{
                       backgroundColor: '#0f172a',
@@ -131,7 +140,13 @@ export const BaseNode = ({
                       padding: '5px 8px',
                       fontSize: '12px',
                       outline: 'none',
-                      resize: 'vertical'
+                      resize: 'none',
+                      minWidth: '150px',
+                      maxWidth: '400px',
+                      width: 'fit-content',
+                      whiteSpace: 'pre',
+                      overflowX: 'hidden',
+                      boxSizing: 'border-box',
                     }}
                   />
                 ) : (
