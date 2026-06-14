@@ -1,35 +1,60 @@
 // textNode.js
+// Text node component refactored to use BaseNode with dynamic variable handles.
+// --------------------------------------------------
 
 import { useState } from 'react';
-import { Handle, Position } from 'reactflow';
+import { BaseNode } from './BaseNode';
 
 export const TextNode = ({ id, data }) => {
-  const [currText, setCurrText] = useState(data?.text || '{{input}}');
-
-  const handleTextChange = (e) => {
-    setCurrText(e.target.value);
+  // Parse variables from text input (e.g. {{ variable }})
+  const parseVariables = (textVal) => {
+    const regex = /\{\{\s*([a-zA-Z_$][a-zA-Z0-9_$]*)\s*\}\}/g;
+    const vars = new Set();
+    let match;
+    while ((match = regex.exec(textVal)) !== null) {
+      vars.add(match[1]);
+    }
+    return Array.from(vars);
   };
 
+  const initialText = data?.text ?? '{{input}}';
+  const [variables, setVariables] = useState(() => parseVariables(initialText));
+
+  // Handle updates to text from BaseNode field to recalculate variable handles
+  const handleFieldChange = (fieldName, val) => {
+    if (fieldName === 'text') {
+      setVariables(parseVariables(val));
+    }
+  };
+
+  // Convert variables to inputs config
+  const inputs = variables.map((v) => ({
+    id: v,
+    label: v
+  }));
+
+  const outputs = [
+    { id: 'output', label: 'Output' }
+  ];
+
+  const fields = [
+    {
+      name: 'text',
+      label: 'Text',
+      type: 'textarea',
+      defaultValue: '{{input}}'
+    }
+  ];
+
   return (
-    <div style={{width: 200, height: 80, border: '1px solid black'}}>
-      <div>
-        <span>Text</span>
-      </div>
-      <div>
-        <label>
-          Text:
-          <input 
-            type="text" 
-            value={currText} 
-            onChange={handleTextChange} 
-          />
-        </label>
-      </div>
-      <Handle
-        type="source"
-        position={Position.Right}
-        id={`${id}-output`}
-      />
-    </div>
+    <BaseNode
+      id={id}
+      data={data}
+      title="Text"
+      inputs={inputs}
+      outputs={outputs}
+      fields={fields}
+      onFieldChange={handleFieldChange}
+    />
   );
-}
+};
